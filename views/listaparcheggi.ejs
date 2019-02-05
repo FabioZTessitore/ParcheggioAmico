@@ -47,7 +47,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </li>
+      </li>na
 NON CI SERVE PER ORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
     </ul>
 
@@ -77,7 +77,8 @@ NON CI SERVE PER ORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Parcheggi </th>
+      <th scope="col">Parcheggi</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
@@ -85,6 +86,13 @@ NON CI SERVE PER ORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
     <tr>
       <td scope="row"><%= parcheggio._id %></td>
       <td><%= parcheggio.name %></td>
+      <td class="text-center">
+        <form action="/rimuoviparcheggio" method="POST" class="form-inline">
+          <input type="hidden" name="id" value="<%= parcheggio._id %>">
+          <button type="submit" class="btn btn-danger">&times;</button>
+        </form>
+      </td>
+
     </tr>
     <% }); %>
   </tbody>
