@@ -41,14 +41,20 @@ app.get('/admin', function (req, res) {
 });
 
 app.post('/nuovoparcheggio', function (req,res ){
-
   const nuovoParcheggio = new Parcheggio({
     name: req.body.inputNomeP
   });
-nuovoParcheggio.save().then( function () {
-  res.redirect('/admin');
+  nuovoParcheggio.save().then( function () {
+    res.redirect('/admin');
+  });
 });
 
+app.post('/rimuoviparcheggio', function(req,res){
+  Parcheggio.remove({
+    _id: req.body.id
+  }, function(err){
+    res.redirect('/admin');
+  });
 });
 
 app.use( function (req, res)  {
