@@ -57,6 +57,11 @@ app.post('/rimuoviparcheggio', function(req,res){
   });
 });
 
+app.get('/posti', function (req, res) {
+  res.render('utenti');
+});
+
+
 app.use( function (req, res)  {
   res.status(404);
   res.sendFile(__dirname + "/public/404.html");
