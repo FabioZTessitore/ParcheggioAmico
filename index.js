@@ -14,6 +14,7 @@ const Parcheggio = mongoose.model('Parcheggio', parcheggioSchema);
 
 mongoose.connect(
  'mongodb://parcheggioAdmin:cipolla1@ds119548.mlab.com:19548/heroku_21bs4mt6',
+ { useNewUrlParser: true },
  function (err) {
    if (err) {
      console.log(err);
@@ -39,6 +40,17 @@ app.get('/admin', function (req, res) {
     res.render('listaparcheggi', {listaparcheggi:result});
   })
 });
+
+
+app.get('/parcheggi/:id', function (req, res) {
+  const id = req.params.id;
+  Parcheggio.findOne({ _id: id })
+	.exec(function(err, result){
+		res.render('modificaparcheggio', {parcheggio: result});
+	});
+});
+
+
 
 app.post('/nuovoparcheggio', function (req,res ){
   const nuovoParcheggio = new Parcheggio({
