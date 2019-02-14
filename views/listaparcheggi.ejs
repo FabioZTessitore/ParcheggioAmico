@@ -85,7 +85,7 @@ NON CI SERVE PER ORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
 <% listaparcheggi.forEach(function(parcheggio){ %>
     <tr>
       <td scope="row"><%= parcheggio._id %></td>
-      <td><%= parcheggio.name %></td>
+      <td><a href="/parcheggi/<%= parcheggio._id %>"><%= parcheggio.name %></a></td>
       <td class="text-center">
         <form action="/rimuoviparcheggio" method="POST" class="form-inline">
           <input type="hidden" name="id" value="<%= parcheggio._id %>">

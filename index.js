@@ -7,13 +7,16 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 
 const parcheggioSchema = mongoose.Schema({
-  name: { type: String, required: true }
+  name: { type: String, required: true },
+  indirizzo: { type: String, required: true },
+  tariffaoraria: { type: String, required: true }
 });
 
 const Parcheggio = mongoose.model('Parcheggio', parcheggioSchema);
 
 mongoose.connect(
  'mongodb://parcheggioAdmin:cipolla1@ds119548.mlab.com:19548/heroku_21bs4mt6',
+ { useNewUrlParser: true },
  function (err) {
    if (err) {
      console.log(err);
@@ -39,6 +42,43 @@ app.get('/admin', function (req, res) {
     res.render('listaparcheggi', {listaparcheggi:result});
   })
 });
+
+
+app.get('/parcheggi/:id', function (req, res) {
+  const id = req.params.id;
+  Parcheggio.findOne({ _id: id })
+	.exec(function(err, result){
+		res.render('modificaparcheggio', {parcheggio: result});
+	});
+});
+
+
+app.post('/parcheggio', function(req, res) {
+
+console.log(req.body);
+if(!req.body.nome)
+{
+res.status(400);
+res.end("A parcheggio must have a name");
+return;
+}
+
+Parcheggio.updateOne(
+
+{_id: req.body.id},
+
+{name: req.body.nome,
+ indirizzo: req.body.indirizzo,
+ tariffaoraria: req.body.tariffaoraria
+},
+
+
+function(err) {
+res.redirect('/admin');
+});
+
+});
+
 
 app.post('/nuovoparcheggio', function (req,res ){
   const nuovoParcheggio = new Parcheggio({
