@@ -18,7 +18,7 @@
 <!--NAVBAR-->
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#"><i class="fas fa-car-alt"></i> ParcheggioAmico</a>
+  <a class="navbar-brand" href="/"><i class="fas fa-car-alt"></i> ParcheggioAmico</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -47,7 +47,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </li>
+      </li>na
 NON CI SERVE PER ORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
     </ul>
 
@@ -64,35 +64,54 @@ NON CI SERVE PER ORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
     <h1 class="display-4 text-center">Parcheggio Amico</h1>
   </div>
 
-</div>
-<!-- FINE CONTAINER CON JUMBOTRON -->
 
-<div class="container">
+
+
+<h2>Parcheggio <a href="/parcheggi/<%= parcheggio._id %>"><%= parcheggio.name %></a> </h2>
+
+
+
+  <form action="/postiauto" method="POST" class="form-inline">
+    <div class="form-group mx-sm-3 mb-2">
+
+      <input type="hidden" class="form-control" name="id" value="<%= parcheggio._id%>" >
+      
+      <label for="inputNomeP" class="sr-only">Nome Parcheggio</label>
+      <input type="text" class="form-control" id="inputNomeP" name="inputNomeP" placeholder="Nome Posto">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">Salva Parcheggio</button>
+  </form>
+
 <table class="table table-bordered table-dark">
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Parcheggi </th>
-      <th scope="col">Altre informazioni</th>
+      <th scope="col">Parcheggio ID</th>
+      <th scope="col">Nome Parcheggio</th>
+      <th scope="col">Occupato</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
+<% listaposti.forEach(function(postoauto){ %>
     <tr>
-      <th scope="row">1</th>
-      <td>non so che cosa scrivere</td>
-      <td>non so che cosa scrivere</td>
+      <td scope="row"><%= postoauto._id %></td>
+      <td><%= postoauto.parcheggioID %></td>
+      <td><%= postoauto.name %></td>
+      <td><%= postoauto.occupato %></td>
+      <td class="text-center">
+        <form action="#" method="POST" class="form-inline">
+          <input type="hidden" name="id" value="">
+          <button type="submit" class="btn btn-danger">&times;</button>
+        </form>
+      </td>
+
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>non so cosa scrivere</td>
-      <td>non so cosa scrivere</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Informazioni finali</td>
-    </tr>
+    <% }); %>
   </tbody>
 </table>
+
+
 </div>
 
 
