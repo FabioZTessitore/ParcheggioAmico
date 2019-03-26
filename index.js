@@ -14,6 +14,16 @@ const parcheggioSchema = mongoose.Schema({
 
 const Parcheggio = mongoose.model('Parcheggio', parcheggioSchema);
 
+
+const postoautoSchema = mongoose.Schema({
+  name: {type: String, required: true},
+  occupato: {type: Boolean, required: true, default: false},
+  parcheggioID: {type: String, required:true}
+});
+
+const Postoauto= mongoose.model('Postoauto', postoautoSchema);
+ 
+
 mongoose.connect(
  'mongodb://parcheggioAdmin:cipolla1@ds119548.mlab.com:19548/heroku_21bs4mt6',
  { useNewUrlParser: true },
@@ -35,6 +45,19 @@ app.set('view engine','ejs');
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
 });
+
+
+app.get('/postiauto/:id', function (req,res) {
+const  id = req.params.id;
+  Parcheggio.findOne({ _id: id })
+	.exec(function(err, parcheggio){
+                Postoauto.find({parcheggioID: id})
+                    .exec(function(err, postiauto){
+		          res.render('postiauto', {parcheggio: parcheggio, listaposti: postiauto});
+                    });
+	});
+});
+
 
 app.get('/admin', function (req, res) {
   Parcheggio.find()
@@ -72,11 +95,22 @@ Parcheggio.updateOne(
  tariffaoraria: req.body.tariffaoraria
 },
 
-
 function(err) {
 res.redirect('/admin');
 });
 
+});
+
+app.post('/postiauto', function(req, res) {
+
+console.log(req.body);
+const nuovoPostoauto = new Postoauto({
+    name: req.body.inputNomeP, 
+    parcheggioID: req.body.id
+  });
+  nuovoPostoauto.save().then( function () {
+    res.redirect('/postiauto/'+req.body.id);
+  });
 });
 
 
