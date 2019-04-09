@@ -1,8 +1,10 @@
-const express = require('express');
+const app = require('express')();
+const http = require('http').Server(app);
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
+const io = require('socket.io')(http);
 
-const app = express();
+let sockets = [];
 
 // parcheggio
 const parcheggioSchema = mongoose.Schema({
@@ -20,6 +22,12 @@ const postoautoSchema = mongoose.Schema({
 });
 const Postoauto= mongoose.model('Postoauto', postoautoSchema);
  
+// associazione postoAuto - sensore (scheda + pin)
+const sensoreSchema = mongoose.Schema({
+  postoAutoId: { type: String, required: true },
+  sensore: { type: String, required: true }
+});
+const Sensore = mongoose.model('Sensore', sensoreSchema);
 
 mongoose.connect(
  'mongodb://parcheggioAdmin:cipolla1@ds119548.mlab.com:19548/heroku_21bs4mt6',
@@ -29,7 +37,7 @@ mongoose.connect(
      console.log(err);
      return;
    }
-  app.listen(process.env.PORT || 3000);
+  http.listen(process.env.PORT || 3000);
  }
 );
 
@@ -105,8 +113,10 @@ app.get('/postiauto/:id', function (req, res) {
 	  });
 });
 
-
 app.post('/rimuoviparcheggio', function(req,res){
+  // al momento non rimuovere i parcheggi
+  res.redirect('/admin');
+
   Parcheggio.remove({
     _id: req.body.id
   }, function(err){
@@ -118,7 +128,50 @@ app.get('/posti', function (req, res) {
   res.render('utenti');
 });
 
+app.get('/postiauto/espfrn/01/:status', function (req, res) {
+  const sensoreStatus = req.params.status;
+
+  Sensore.findOne({ sensore: "ESPFRN01" })
+    .exec( function (err, sensore) {
+      Postoauto.updateOne({
+        _id: sensore.postoAutoId
+      }, {
+        occupato: sensoreStatus
+      }, function (err) {
+        if (err) console.log(err);
+      });
+    });
+
+  sockets[0].emit('status', {
+    status: sensoreStatus
+  });
+
+  res.end();
+});
+
+app.get('/cercaposto', function (req, res) {
+  res.sendFile(__dirname + '/public/cerca.html');
+});
+
 app.use(function (req, res)  {
   res.status(404);
   res.sendFile(__dirname + "/public/404.html");
+});
+
+io.on('connection', function (socket) {
+
+  socket.emit('hello', {
+    msg: 'hello'
+  });
+
+  socket.on('disconnect', function () {
+    sockets = sockets.filter(function (s) {
+      return socket !== s;
+    });
+  });
+
+  sockets.push(socket);
+
+
+  console.log('connessione socket');
 });

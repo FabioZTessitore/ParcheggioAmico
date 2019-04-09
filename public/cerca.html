@@ -20,40 +20,13 @@
 <!--NAVBAR-->
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#"><i class="fas fa-car-alt"></i> ParcheggioAmico</a>
+  <a class="navbar-brand" href="/"><i class="fas fa-car-alt"></i> ParcheggioAmico</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/admin">Admin <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="/cercaposto">Cerca posto auto <span class="sr-only">(current)</span></a>
-      </li>
-
-<!--NON CI SERVE PER ORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </li>
-NON CI SERVE PER ORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
     </ul>
 
 
@@ -66,8 +39,15 @@ NON CI SERVE PER ORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
 <div class="container mt-5">
 
   <div class="jumbotron">
-    <h1 class="display-4 text-center">Parcheggio Amico</h1>
-    <p class="text-center"><i class="fas fa-car-alt fa-10x animated zoomIn"></i></p>
+    <h4 class="display-4 text-center">Parcheggio Amico</h4>
+    <h3 class="display-4 text-center">De Parcheggis</h3>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <h1 id="posto" class="text-center alert-warning">A1</h1>
+      <p class="text-center alert-info">Il posto risulta prenotato per 15 min.</p>
+    </div>
   </div>
 
 </div>
@@ -75,6 +55,30 @@ NON CI SERVE PER ORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
 
 
 
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+
+  var to;
+
+  socket.on('hello', function (data) {
+    console.log(data);
+  });
+
+  socket.on('status', function (data) {
+    console.log(data);
+    if (data.status == "true") {
+      clearTimeout(to);
+    $('#posto').removeClass('alert-warning');
+      $('#posto').addClass('alert-success');
+    }
+  });
+
+  to = setTimeout(function () {
+    $('#posto').removeClass('alert-warning');
+    $('#posto').addClass('alert-danger');
+  }, 15000);
+</script>
 
 
 
