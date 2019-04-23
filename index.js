@@ -116,6 +116,7 @@ app.get('/postiauto/:id', function (req, res) {
 app.post('/rimuoviparcheggio', function(req,res){
   // al momento non rimuovere i parcheggi
   res.redirect('/admin');
+  return;
 
   Parcheggio.remove({
     _id: req.body.id
@@ -142,7 +143,28 @@ app.get('/postiauto/espfrn/01/:status', function (req, res) {
       });
     });
 
-  sockets[0].emit('status', {
+  sockets[0].emit('status01', {
+    status: sensoreStatus
+  });
+
+  res.end();
+});
+
+app.get('/postiauto/espfrn/03/:status', function (req, res) {
+  const sensoreStatus = req.params.status;
+
+  Sensore.findOne({ sensore: "ESPFRN03" })
+    .exec( function (err, sensore) {
+      Postoauto.updateOne({
+        _id: sensore.postoAutoId
+      }, {
+        occupato: sensoreStatus
+      }, function (err) {
+        if (err) console.log(err);
+      });
+    });
+
+  sockets[0].emit('status03', {
     status: sensoreStatus
   });
 
@@ -151,6 +173,10 @@ app.get('/postiauto/espfrn/01/:status', function (req, res) {
 
 app.get('/cercaposto', function (req, res) {
   res.sendFile(__dirname + '/public/cerca.html');
+});
+
+app.get('/cercaposto_h', function (req, res) {
+  res.sendFile(__dirname + '/public/cerca_h.html');
 });
 
 app.use(function (req, res)  {
@@ -171,7 +197,6 @@ io.on('connection', function (socket) {
   });
 
   sockets.push(socket);
-
 
   console.log('connessione socket');
 });

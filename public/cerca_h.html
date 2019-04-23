@@ -45,7 +45,7 @@
 
   <div class="row">
     <div class="col">
-      <h1 id="posto" class="text-center alert-warning">A1</h1>
+      <h1 id="posto" class="text-center alert-warning">A3 (H)</h1>
       <p class="text-center alert-info">Il posto risulta prenotato per 15 min.</p>
     </div>
   </div>
@@ -65,7 +65,7 @@
     console.log(data);
   });
 
-  socket.on('status01', function (data) {
+  socket.on('status03', function (data) {
     console.log(data);
     if (data.status == "true") {
       clearTimeout(to);
